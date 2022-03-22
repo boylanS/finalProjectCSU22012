@@ -120,4 +120,15 @@ public class busStop {
     {
         this.parent_station = station;
     }
+
+    public String toString()
+    {
+        String stringForm = "Stop ID: "+stop_id+"\n"+
+                "Stop Code: "+stop_code+"\n"+"Stop Name: "+stop_name+"\n"+
+                "Stop Desc: "+stop_desc+"\n"+"Stop Lat: "+stop_lat+"\n"+
+                "Stop Lon: "+stop_lon+"\n"+"Stop URL: "+stop_url+"\n"+
+                "Location Type: "+location_type+"\n"+"Parent Station: "+parent_station+"\n";
+
+        return stringForm;
+    }
 }
