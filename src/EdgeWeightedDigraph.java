@@ -1,42 +1,69 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class EdgeWeightedDigraph {
 
-    private int V;
-    private int E;
+    private int numberOfStops;
+    private int numberOfTrips;
     private ArrayList<DirectedEdge>[] adj;
-    private int[] indegree;
+    //private int[] indegree;
     private static final String NEWLINE = System.getProperty("line.separator");
     private ArrayList<busStop>[] vertices;
+    private int[] stopIDs;
 
-    public EdgeWeightedDigraph(int V)
+    public EdgeWeightedDigraph(int V, ArrayList<busStop> busStops)
     {
-        this.V = V;
-        this.E = 0;
-        this.indegree = new int[V];
+        this.numberOfStops = V;
+        this.numberOfTrips = 0;
+        //this.indegree = new int[V];
         adj = (ArrayList<DirectedEdge>[]) new ArrayList[V];
         vertices = (ArrayList<busStop>[]) new ArrayList[V];
+        stopIDs =  new int[V];
 
         for (int v = 0; v < V; v ++)
         {
             adj[v] = new ArrayList<DirectedEdge>();
+            stopIDs[v] = (busStops.get(v)).getStop_id();
+            //System.out.println(stopIDs[v]);
         }
+
+        System.out.println("First element: "+stopIDs[0]);
+        stopIDs = BinarySearch.quickSort(stopIDs);
+        System.out.println("First element: "+stopIDs[0]);
+        System.out.println(BinarySearch.indexOf(stopIDs,1888));
+
+
+
 
     }
 
 
-    public int V()
+    public int getNumberOfStops()
     {
-        return V;
+        return numberOfStops;
+    }
+
+    public int[] stopIDs(){
+        return stopIDs;
     }
 
     void addEdge(DirectedEdge e)
     {
         int v = e.from();
         int w = e.to();
-        adj[v].add(e);
-        indegree[w]++;
-        E++;
+        int index = BinarySearch.indexOf(stopIDs,v);
+
+        if (index == -1)
+        {
+            System.out.println(v);
+        }
+        else
+        {
+            adj[index].add(e);
+            //indegree[w]++;
+            numberOfTrips++;
+        }
+
 
     }
 
@@ -48,14 +75,16 @@ public class EdgeWeightedDigraph {
 
     public String toString() {
         StringBuilder s = new StringBuilder();
-        s.append(V + " " + E + NEWLINE);
-        for (int v = 0; v < V; v++) {
+        s.append(numberOfStops + " " + numberOfTrips + NEWLINE);
+        for (int v = 0; v < numberOfStops; v++) {
             s.append(v + ": ");
             for (DirectedEdge e : adj[v]) {
-                s.append(e + "  ");
+                s.append(e.toString() + "  ");
             }
             s.append(NEWLINE);
         }
         return s.toString();
     }
+
+
 }

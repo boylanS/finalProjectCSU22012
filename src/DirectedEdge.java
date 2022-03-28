@@ -1,12 +1,12 @@
 public class DirectedEdge {
-    private int v;
-    private int w;
+    private int source_id;
+    private int destination_id;
     private double weight;
 
     DirectedEdge(int v, int w, double weight)
     {
-        this.v = v;
-        this.w = w;
+        this.source_id = v;
+        this.destination_id = w;
         this.weight = weight;
     }
 
@@ -17,13 +17,18 @@ public class DirectedEdge {
 
     int from()
     {
-        return v;
+        return source_id;
 
     }
 
     int to()
     {
-        return w;
+        return destination_id;
+    }
+
+    public String toString() {
+        return source_id + "->" + destination_id + " " + String.format("%5.2f", weight);
     }
 
 }
+

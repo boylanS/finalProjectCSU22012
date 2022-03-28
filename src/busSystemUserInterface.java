@@ -46,10 +46,18 @@ public class busSystemUserInterface {
 
         if (userSelection == 1)
         {
-            //ArrayList<busStop> busStopList = readBusStopInput();
             //System.out.println(busStopList.get(0).toString());
+           /* for (int countStops = 0; countStops < busStopList.size(); countStops ++)
+            {
+                System.out.println(busStopList.get(countStops).getStop_id());
+            }*/
+
+            EdgeWeightedDigraph graphRep = graphConstructor(busTransfersList,busStopTimesList,
+                    busStopList, busStopList.size());
+            int[] stopIDs = graphRep.stopIDs();
+           // System.out.println(graphRep.toString());
         }
-        if (userSelection == 2)
+        else if (userSelection == 2)
         {
 
         }
@@ -293,12 +301,13 @@ public class busSystemUserInterface {
     }
 
     public static EdgeWeightedDigraph graphConstructor(ArrayList<busTransfers> busTransfers, ArrayList<busStopTimes> stopTimes,
+                                                       ArrayList<busStop> busStopList,
                                                        int numberOfStops)
     {
         busTransfers tempTransfer;
         DirectedEdge tempEdge;
         int weight = 0;
-        EdgeWeightedDigraph graphRep = new EdgeWeightedDigraph(numberOfStops);
+        EdgeWeightedDigraph graphRep = new EdgeWeightedDigraph(numberOfStops, busStopList);
 
         for (int count = 0; count < busTransfers.size(); count++)
         {
