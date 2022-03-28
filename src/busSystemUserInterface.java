@@ -1,8 +1,8 @@
-import java.util.Scanner;
-import java.util.ArrayList;
+import java.util.*;
 import java.io.*;
-import java.util.NoSuchElementException;
 import java.util.Scanner;
+import java.time.*;
+import java.time.format.*;
 
 public class busSystemUserInterface {
 
@@ -12,7 +12,6 @@ public class busSystemUserInterface {
         ArrayList<busTransfers> busTransfersList = readBusTransfers();
         ArrayList<busStopTimes> busStopTimesList = readBusStopTimes();
         int numberOfStops = busStopList.size();
-        System.out.println(numberOfStops);
         /*EdgeWeightedDigraph graphRep = graphConstructor(busTransfersList,
                 busStopTimesList, numberOfStops);*/
 
@@ -25,6 +24,8 @@ public class busSystemUserInterface {
         Scanner inputScanner = new Scanner(System.in);
         boolean validInput = false;
         int userSelection = 0;
+        boolean validTime = false;
+        String userTime = "";
 
         while (!validInput) {
             System.out.println("Enter number corresponding to desired action: ");
@@ -33,10 +34,10 @@ public class busSystemUserInterface {
 
                 if (userSelection < 1 || userSelection > 3) {
                     System.out.println("Error: input does not correspond to action.");
-                    inputScanner.nextLine();
                 } else {
                     validInput = true;
                 }
+                inputScanner.nextLine();
             } else {
                 System.out.println("Error: input must be an integer.");
                 inputScanner.nextLine();
@@ -47,6 +48,37 @@ public class busSystemUserInterface {
         {
             //ArrayList<busStop> busStopList = readBusStopInput();
             //System.out.println(busStopList.get(0).toString());
+        }
+        if (userSelection == 2)
+        {
+
+        }
+        else
+        {
+            while (!validTime)
+            {
+                System.out.println("Enter arrival time in form HH:MM:SS: ");
+                userTime = inputScanner.nextLine();
+
+                try{
+                    LocalTime.parse(userTime);
+                    validTime = true;
+                }catch (DateTimeParseException | NullPointerException e){
+                    System.out.println("Invalid time string- must be in form HH:MM:SS");
+                }
+
+            }
+
+            ArrayList<busStopTimes> arrivalBusStopTimes = stopTimesGivenArrival(userTime,
+                    busStopTimesList);
+            for (int countStops = 0; countStops < arrivalBusStopTimes.size(); countStops++)
+            {
+                System.out.println(arrivalBusStopTimes.get(countStops).toString());
+            }
+
+            System.out.println(arrivalBusStopTimes.size());
+
+
         }
 
     }
@@ -211,31 +243,38 @@ public class busSystemUserInterface {
 
                         trip_id = Integer.parseInt(lineElements[0]);
                         arrival_time = lineElements[1];
+                        arrival_time = validTimeInput(arrival_time);
                         departure_time = lineElements[2];
-                        stop_id = Integer.parseInt(lineElements[3]);
-                        stop_sequence = Integer.parseInt(lineElements[4]);
-                        stop_headsign = lineElements[5];
-                        pickup_type = Integer.parseInt(lineElements[6]);
-                        drop_off_type = Integer.parseInt(lineElements[7]);
-
-                        if (lineElements.length == 9)
+                        departure_time = validTimeInput(departure_time);
+                        if (!(arrival_time == "error") || !(departure_time == "error"))
                         {
-                            shape_dist_traveled = Double.parseDouble(lineElements[8]);
+                            stop_id = Integer.parseInt(lineElements[3]);
+                            stop_sequence = Integer.parseInt(lineElements[4]);
+                            stop_headsign = lineElements[5];
+                            pickup_type = Integer.parseInt(lineElements[6]);
+                            drop_off_type = Integer.parseInt(lineElements[7]);
+
+                            if (lineElements.length == 9)
+                            {
+                                shape_dist_traveled = Double.parseDouble(lineElements[8]);
+                            }
+                            else
+                            {
+                                shape_dist_traveled = 0;
+                            }
+
+
+
+                            busStopTimes newStopTime = new busStopTimes(trip_id, arrival_time,
+                                    departure_time, stop_id,
+                                    stop_sequence, stop_headsign,
+                                    pickup_type, drop_off_type,
+                                    shape_dist_traveled);
+
+                            busStopTimes.add(newStopTime);
+
                         }
-                        else
-                        {
-                            shape_dist_traveled = 0;
-                        }
 
-
-
-                        busStopTimes newStopTime = new busStopTimes(trip_id, arrival_time,
-                                departure_time, stop_id,
-                                stop_sequence, stop_headsign,
-                                pickup_type, drop_off_type,
-                                shape_dist_traveled);
-
-                        busStopTimes.add(newStopTime);
 
                     } catch (NoSuchElementException ex) {
                         ex.printStackTrace();
@@ -297,6 +336,78 @@ public class busSystemUserInterface {
         }
 
         return graphRep;
+    }
+
+    public static String validTimeInput(String timeInput)
+    {
+
+        if (timeInput!= null)
+        {
+            char firstCharacter = timeInput.charAt(0);
+            if (firstCharacter == ' ')
+            {
+                timeInput = timeInput.replaceFirst(" ", "0");
+
+            }
+
+            try{
+                LocalTime.parse(timeInput);
+            }catch (DateTimeParseException | NullPointerException e){
+                return "error";
+            }
+
+        }
+        return timeInput;
+    }
+
+    public static ArrayList<busStopTimes> stopTimesGivenArrival(String arrivalTime,
+                                                                ArrayList<busStopTimes> totalBusStops)
+    {
+        busStopTimes tempStop;
+        ArrayList<busStopTimes> timesByArrival = new ArrayList<busStopTimes>();
+        String tempStopArr;
+
+        for (int count = 0; count < totalBusStops.size(); count ++)
+        {
+            tempStop = totalBusStops.get(count);
+            tempStopArr = tempStop.getArrival_time();
+
+            if (tempStopArr.equals(arrivalTime))
+            {
+                timesByArrival.add(tempStop);
+                timesByArrival = insertionSortStopTimes(timesByArrival);
+            }
+
+        }
+
+        return timesByArrival;
+
+    }
+
+    public static ArrayList<busStopTimes> insertionSortStopTimes (ArrayList<busStopTimes> a){
+
+        busStopTimes[] tempArray = new busStopTimes[a.size()];
+        int tempID1;
+        int tempID2;
+        busStopTimes tempStop;
+
+        for (int i = 1; i < a.size(); i ++)
+        {
+            for (int j = i; j > 0; j --)
+            {
+                tempID1 = a.get(j).getTrip_id();
+                tempID2 = a.get(j-1).getTrip_id();
+
+                if (tempID1 < tempID2)
+                {
+                    tempArray[i] = a.get(j);
+                    a.set(j,a.get(j-1));
+                    a.set(j-1,tempArray[i]);
+                }
+            }
+        }
+
+        return a;
     }
 
 }
