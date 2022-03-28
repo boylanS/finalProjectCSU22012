@@ -55,6 +55,16 @@ public class busSystemUserInterface {
             EdgeWeightedDigraph graphRep = graphConstructor(busTransfersList,busStopTimesList,
                     busStopList, busStopList.size());
             int[] stopIDs = graphRep.stopIDs();
+            System.out.println("Enter desired source bus stop: ");
+            int sourceID = inputScanner.nextInt();
+            inputScanner.nextLine();
+            System.out.println("Enter desired destination bus stop: ");
+            int destinationID = inputScanner.nextInt();
+            inputScanner.nextLine();
+
+            int sourceIDIndex = BinarySearch.indexOf(stopIDs,sourceID);
+
+            DijkstraSP shortestPath = new DijkstraSP(graphRep, sourceIDIndex);
            // System.out.println(graphRep.toString());
         }
         else if (userSelection == 2)

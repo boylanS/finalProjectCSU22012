@@ -43,6 +43,8 @@ public class EdgeWeightedDigraph {
         return numberOfStops;
     }
 
+    public int getNumberOfTrips() {return numberOfTrips; }
+
     public int[] stopIDs(){
         return stopIDs;
     }
