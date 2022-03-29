@@ -64,8 +64,27 @@ public class busSystemUserInterface {
 
             int sourceIDIndex = BinarySearch.indexOf(stopIDs,sourceID);
 
-            DijkstraSP shortestPath = new DijkstraSP(graphRep, sourceIDIndex);
-           // System.out.println(graphRep.toString());
+            DijkstraSP shortestPath = new DijkstraSP(graphRep, sourceIDIndex,
+                    stopIDs);
+
+            int destinationIDIndex = BinarySearch.indexOf(stopIDs,destinationID);
+
+            /*for (int t = 0; t < graphRep.getNumberOfStops(); t++) {
+                int destinationIDLoop = stopIDs[t];
+                if (shortestPath.hasPathTo(t)) {
+                    System.out.printf("%d to %d (%.2f)  ", sourceID, destinationIDLoop, shortestPath.distTo(t));
+                    for (DirectedEdge e : shortestPath.pathTo(t)) {
+                        System.out.print(e.toString() + "   ");
+                    }
+                    System.out.println();
+                }
+                else {
+                    System.out.printf("%d to %d         no path\n", sourceID, destinationIDLoop);
+                }
+            }*/
+
+            Iterable<DirectedEdge> SPuserInput = shortestPath.pathTo(destinationIDIndex);
+            System.out.println(SPuserInput);
         }
         else if (userSelection == 2)
         {
