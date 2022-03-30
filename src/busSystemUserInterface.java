@@ -84,7 +84,23 @@ public class busSystemUserInterface {
             }*/
 
             Iterable<DirectedEdge> SPuserInput = shortestPath.pathTo(destinationIDIndex);
-            System.out.println(SPuserInput);
+            //System.out.println(SPuserInput);
+            double totalWeight = 0;
+            //System.out.println(destinationID);
+            System.out.println("Route: ");
+            for(DirectedEdge path : SPuserInput)
+            {
+                System.out.print(path.to()+" <- ("+path.weight()+") - ");
+                //System.out.println("Stop "+path.from()+" to stop "+path.to());
+                //System.out.println("Weight = "+path.weight());
+                totalWeight = totalWeight + path.weight();
+            }
+            System.out.print(sourceID);
+            System.out.println("\nTotal cost: "+totalWeight);
+        {
+
+        }
+
         }
         else if (userSelection == 2)
         {
