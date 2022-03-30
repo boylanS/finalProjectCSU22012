@@ -19,7 +19,7 @@ public class TrieST<Value>
         if (x == null) x = new Node();
         if (d == key.length())
         {
-            x.val = val;
+            //x.val = val;
             return x;
         }
     }
