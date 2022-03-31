@@ -104,6 +104,70 @@ public class busSystemUserInterface {
         }
         else if (userSelection == 2)
         {
+            TrieST busStopTrie = new TrieST<String>();
+            for (int busStopLoop = 0; busStopLoop < busStopList.size(); busStopLoop++)
+            {
+                String busStop = busStopList.get(busStopLoop).getStop_name();
+                String[] busStopName = busStop.split(" ");
+                String stringToMove;
+
+
+                switch(busStopName[0]){
+                    case "FLAGSTOP":
+                        /*if (busStopName[1].equals("WB") ||
+                                busStopName[1].equals("NB") ||
+                                busStopName[1].equals("SB") ||
+                                busStopName[1].equals("EB") )
+                        {
+                            stringToMove = busStopName[0]+" "+busStopName[1];
+                            busStop = moveToEnd(busStopName, stringToMove, 2);
+                        }
+                        else
+                        {
+                            stringToMove = busStopName[0];
+                            busStop = moveToEnd(busStopName, stringToMove, 1);
+                        }*/
+
+                        busStopName = moveToEnd(busStopName);
+
+
+                    case "WB":
+                        /*stringToMove = busStopName[0];
+                        busStop = moveToEnd(busStopName, stringToMove, 1);*/
+                        busStopName = moveToEnd(busStopName);
+                        break;
+
+                    case "NB":
+                        /*stringToMove = busStopName[0];
+                        busStop = moveToEnd(busStopName, stringToMove, 1);*/
+                        busStopName = moveToEnd(busStopName);
+                        break;
+
+                    case "SB":
+
+                        /*stringToMove = busStopName[0];
+                        busStop = moveToEnd(busStopName, stringToMove, 1);*/
+                        busStopName = moveToEnd(busStopName);
+                        break;
+
+                    case "EB":
+                        /*stringToMove = busStopName[0];
+                        busStop = moveToEnd(busStopName, stringToMove, 1);*/
+                        busStopName = moveToEnd(busStopName);
+                        break;
+                    default:
+                }
+
+                String busStopClear = String.join(" ",busStopName);
+                //System.out.println(busStopClear);
+
+                busStopTrie.put(busStopClear,busStopLoop);
+            }
+
+            System.out.println("Search for bus stop by name: ");
+            String searchStop = inputScanner.nextLine();
+            inputScanner.nextLine();
+
 
         }
         else
@@ -462,6 +526,22 @@ public class busSystemUserInterface {
         }
 
         return a;
+    }
+
+    public static String[] moveToEnd(String[] stringArray)
+    {
+        String tempString = stringArray[0];
+
+        for (int count = 1; count < stringArray.length; count++)
+        {
+            stringArray[count-1] = stringArray[count];
+        }
+
+        stringArray[stringArray.length-1] = tempString;
+
+        return stringArray;
+
+
     }
 
 }
