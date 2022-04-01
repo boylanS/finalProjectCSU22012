@@ -4,6 +4,7 @@ import java.util.Scanner;
 import java.time.*;
 import java.time.format.*;
 
+
 public class busSystemUserInterface {
 
     public static void main(String[] args) {
@@ -104,7 +105,7 @@ public class busSystemUserInterface {
         }
         else if (userSelection == 2)
         {
-            TrieST busStopTrie = new TrieST<String>();
+            TST<Integer> busStopTrie = new TST<Integer>();
             for (int busStopLoop = 0; busStopLoop < busStopList.size(); busStopLoop++)
             {
                 String busStop = busStopList.get(busStopLoop).getStop_name();
@@ -162,11 +163,30 @@ public class busSystemUserInterface {
                 //System.out.println(busStopClear);
 
                 busStopTrie.put(busStopClear,busStopLoop);
+
+                /*if (busStopTrie.size() < 100) {
+                    System.out.println("keys(\"\"):");
+                    for (String key : busStopTrie.keys()) {
+                        System.out.println(key + " " + busStopTrie.get(key));
+                    }
+                    System.out.println();
+
+
+                }*/
+
+
             }
 
             System.out.println("Search for bus stop by name: ");
-            String searchStop = inputScanner.nextLine();
-            inputScanner.nextLine();
+            Scanner busStopScanner = new Scanner(System.in);
+            String searchStop = busStopScanner.nextLine();
+            //inputScanner.nextLine();
+            Iterable<String> searchKeys = busStopTrie.keysWithPrefix(searchStop);
+
+            for (String s: searchKeys)
+            {
+                System.out.println(s);
+            }
 
 
         }
