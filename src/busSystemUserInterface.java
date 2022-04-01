@@ -106,10 +106,14 @@ public class busSystemUserInterface {
         else if (userSelection == 2)
         {
             TST<Integer> busStopTrie = new TST<Integer>();
+            ArrayList<Integer> stopIDList = new ArrayList<Integer>();
+            ArrayList<String> busStopsAmended = new ArrayList<String>();
             for (int busStopLoop = 0; busStopLoop < busStopList.size(); busStopLoop++)
             {
                 String busStop = busStopList.get(busStopLoop).getStop_name();
+                int busStopID = busStopList.get(busStopLoop).getStop_id();
                 String[] busStopName = busStop.split(" ");
+                stopIDList.add(busStopID);
                 String stringToMove;
 
 
@@ -163,6 +167,7 @@ public class busSystemUserInterface {
                 //System.out.println(busStopClear);
 
                 busStopTrie.put(busStopClear,busStopLoop);
+                busStopsAmended.add(busStopClear);
 
                 /*if (busStopTrie.size() < 100) {
                     System.out.println("keys(\"\"):");
@@ -183,10 +188,42 @@ public class busSystemUserInterface {
             //inputScanner.nextLine();
             Iterable<String> searchKeys = busStopTrie.keysWithPrefix(searchStop);
 
+            ArrayList<busStop> searchReturns = new ArrayList<busStop>();
+            ArrayList<Integer> searchReturnIDs = new ArrayList<Integer>();
+            ArrayList<Integer> searchReturnIndex = new ArrayList<Integer>();
+
             for (String s: searchKeys)
             {
                 System.out.println(s);
+                int searchIndex = busStopsAmended.indexOf(s);
+                searchReturnIndex.add(searchIndex);
             }
+
+            for (int idCount = 0; idCount < searchReturnIndex.size(); idCount++)
+            {
+                int tempIndex = searchReturnIndex.get(idCount);
+                int tempStopID = stopIDList.get(tempIndex);
+                searchReturnIDs.add(tempStopID);
+            }
+
+            for (int stopTotal = 0; stopTotal < busStopList.size(); stopTotal++)
+            {
+                int tempStopID = busStopList.get(stopTotal).getStop_id();
+
+                if (searchReturnIDs.contains(tempStopID))
+                {
+                    searchReturns.add(busStopList.get(stopTotal));
+
+                }
+            }
+
+            for (int returnedStops = 0; returnedStops < searchReturns.size(); returnedStops ++)
+            {
+                System.out.println(searchReturns.get(returnedStops).toString());
+            }
+
+
+
 
 
         }
