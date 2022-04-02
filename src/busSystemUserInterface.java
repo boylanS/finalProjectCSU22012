@@ -9,15 +9,46 @@ public class busSystemUserInterface {
 
     public static void main(String[] args) {
 
+        System.out.println("Welcome to the Vancouver Bus Information Hub!");
+        System.out.println("Loading in bus data..");
         ArrayList<busStop> busStopList = readBusStopInput();
         ArrayList<busTransfers> busTransfersList = readBusTransfers();
         ArrayList<busStopTimes> busStopTimesList = readBusStopTimes();
+        System.out.println("Almost there..");
+
+        ArrayList<Integer> stopIDListToSort = new ArrayList<Integer>();
         int numberOfStops = busStopList.size();
+
+        for (int stopCount = 0; stopCount < numberOfStops; stopCount++)
+        {
+            stopIDListToSort.add(busStopList.get(stopCount).getStop_id());
+        }
+
+        Object[] stopIDListSortedObj = stopIDListToSort.toArray();
+        int stopIDListSorted[] = new int[numberOfStops];
+
+        for (int i = 0; i < stopIDListSortedObj.length; i++)
+        {
+            stopIDListSorted[i] = (int) stopIDListSortedObj[i];
+        }
+
+        stopIDListSorted = BinarySearch.quickSort(stopIDListSorted);
+
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         /*EdgeWeightedDigraph graphRep = graphConstructor(busTransfersList,
                 busStopTimesList, numberOfStops);*/
+        System.out.println("Ready to go!");
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
-        System.out.println("Welcome to the Vancouver bus information hub!" +
-                "\n Would you like to: \n" +
+        System.out.println("\nWould you like to: \n" +
                 "(1) Find the shortest path between two stops \n" +
                 "(2) Search for a bus stop by name \n" +
                 "(3) Search for trips by arrival time \n");
@@ -47,21 +78,54 @@ public class busSystemUserInterface {
 
         if (userSelection == 1)
         {
-            //System.out.println(busStopList.get(0).toString());
-           /* for (int countStops = 0; countStops < busStopList.size(); countStops ++)
-            {
-                System.out.println(busStopList.get(countStops).getStop_id());
-            }*/
 
             EdgeWeightedDigraph graphRep = graphConstructor(busTransfersList,busStopTimesList,
                     busStopList, busStopList.size());
             int[] stopIDs = graphRep.stopIDs();
-            System.out.println("Enter desired source bus stop: ");
-            int sourceID = inputScanner.nextInt();
-            inputScanner.nextLine();
-            System.out.println("Enter desired destination bus stop: ");
-            int destinationID = inputScanner.nextInt();
-            inputScanner.nextLine();
+            boolean validDesiredSource = false;
+            boolean validDesiredDestination = false;
+            int tempSource;
+            int sourceID = 0;
+            int destinationID = 0;
+
+
+            while (!validDesiredSource) {
+                System.out.println("Enter desired source bus stop ID: ");
+                if (inputScanner.hasNextInt()) {
+                    tempSource = inputScanner.nextInt();
+                    int index = BinarySearch.indexOf(stopIDListSorted,tempSource);
+
+                    if (index == -1) {
+                        System.out.println("Error: ID is invalid.");
+                    } else {
+                        sourceID = tempSource;
+                        validDesiredSource = true;
+                    }
+                    inputScanner.nextLine();
+                } else {
+                    System.out.println("Error: stop ID must be an integer.");
+                    inputScanner.nextLine();
+                }
+            }
+
+            while (!validDesiredDestination) {
+                System.out.println("Enter desired destination bus stop ID: ");
+                if (inputScanner.hasNextInt()) {
+                    tempSource = inputScanner.nextInt();
+                    int index = BinarySearch.indexOf(stopIDListSorted,tempSource);
+
+                    if (index == -1) {
+                        System.out.println("Error: ID is invalid.");
+                    } else {
+                        destinationID = tempSource;
+                        validDesiredDestination = true;
+                    }
+                    inputScanner.nextLine();
+                } else {
+                    System.out.println("Error: stop ID must be an integer.");
+                    inputScanner.nextLine();
+                }
+            }
 
             int sourceIDIndex = BinarySearch.indexOf(stopIDs,sourceID);
 
@@ -70,37 +134,23 @@ public class busSystemUserInterface {
 
             int destinationIDIndex = BinarySearch.indexOf(stopIDs,destinationID);
 
-            /*for (int t = 0; t < graphRep.getNumberOfStops(); t++) {
-                int destinationIDLoop = stopIDs[t];
-                if (shortestPath.hasPathTo(t)) {
-                    System.out.printf("%d to %d (%.2f)  ", sourceID, destinationIDLoop, shortestPath.distTo(t));
-                    for (DirectedEdge e : shortestPath.pathTo(t)) {
-                        System.out.print(e.toString() + "   ");
-                    }
-                    System.out.println();
-                }
-                else {
-                    System.out.printf("%d to %d         no path\n", sourceID, destinationIDLoop);
-                }
-            }*/
-
-            Iterable<DirectedEdge> SPuserInput = shortestPath.pathTo(destinationIDIndex);
-            //System.out.println(SPuserInput);
-            double totalWeight = 0;
-            //System.out.println(destinationID);
-            System.out.println("Route: ");
-            for(DirectedEdge path : SPuserInput)
+            if (shortestPath.hasPathTo(destinationIDIndex) == false)
             {
-                System.out.print(path.to()+" <- ("+path.weight()+") - ");
-                //System.out.println("Stop "+path.from()+" to stop "+path.to());
-                //System.out.println("Weight = "+path.weight());
-                totalWeight = totalWeight + path.weight();
+                System.out.println("No path found :(");
             }
-            System.out.print(sourceID);
-            System.out.println("\nTotal cost: "+totalWeight);
-        {
-
-        }
+            else
+            {
+                Iterable<DirectedEdge> SPuserInput = shortestPath.pathTo(destinationIDIndex);
+                double totalWeight = 0;
+                System.out.println("Route: ");
+                for(DirectedEdge path : SPuserInput)
+                {
+                    System.out.print(path.to()+" <- ("+path.weight()+") - ");
+                    totalWeight = totalWeight + path.weight();
+                }
+                System.out.print(sourceID);
+                System.out.println("\nTotal cost: "+totalWeight);
+            }
 
         }
         else if (userSelection == 2)

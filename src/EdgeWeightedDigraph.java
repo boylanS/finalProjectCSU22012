@@ -27,10 +27,10 @@ public class EdgeWeightedDigraph {
             //System.out.println(stopIDs[v]);
         }
 
-        System.out.println("First element: "+stopIDs[0]);
+        //System.out.println("First element: "+stopIDs[0]);
         stopIDs = BinarySearch.quickSort(stopIDs);
-        System.out.println("First element: "+stopIDs[0]);
-        System.out.println(BinarySearch.indexOf(stopIDs,1888));
+       // System.out.println("First element: "+stopIDs[0]);
+        // System.out.println(BinarySearch.indexOf(stopIDs,1888));
 
 
 

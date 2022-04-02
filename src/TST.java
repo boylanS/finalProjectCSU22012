@@ -94,7 +94,7 @@ public class TST<Value> {
 
         return x;
     }
-
+/*
     public String longestPrefixOf(String query)
     {
         if (query == null)
@@ -132,7 +132,7 @@ public class TST<Value> {
         Queue<String> queue = new LinkedList<String>();
         collect(root, new StringBuilder(), queue);
         return queue;
-    }
+    }*/
 
     public Iterable<String> keysWithPrefix(String prefix)
     {
