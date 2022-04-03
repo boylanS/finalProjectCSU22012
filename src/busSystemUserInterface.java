@@ -77,12 +77,13 @@ public class busSystemUserInterface {
                     {
                         userQuit = true;
                         validInput = true;
+                        System.out.println("Thank you! Have a nice day :)");
                         break;
                     }
                     else
                     {
                         System.out.println("Error: input must be an integer.");
-                        inputScanner.nextLine();
+                        //inputScanner.nextLine();
                     }
                 }
             }
