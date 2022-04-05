@@ -1,12 +1,10 @@
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class EdgeWeightedDigraph {
 
     private int numberOfStops;
     private int numberOfTrips;
     private ArrayList<DirectedEdge>[] adj;
-    //private int[] indegree;
     private static final String NEWLINE = System.getProperty("line.separator");
     private ArrayList<busStop>[] vertices;
     private int[] stopIDs;
@@ -15,7 +13,6 @@ public class EdgeWeightedDigraph {
     {
         this.numberOfStops = V;
         this.numberOfTrips = 0;
-        //this.indegree = new int[V];
         adj = (ArrayList<DirectedEdge>[]) new ArrayList[V];
         vertices = (ArrayList<busStop>[]) new ArrayList[V];
         stopIDs =  new int[V];
@@ -24,16 +21,9 @@ public class EdgeWeightedDigraph {
         {
             adj[v] = new ArrayList<DirectedEdge>();
             stopIDs[v] = (busStops.get(v)).getStop_id();
-            //System.out.println(stopIDs[v]);
         }
 
-        //System.out.println("First element: "+stopIDs[0]);
         stopIDs = BinarySearch.quickSort(stopIDs);
-       // System.out.println("First element: "+stopIDs[0]);
-        // System.out.println(BinarySearch.indexOf(stopIDs,1888));
-
-
-
 
     }
 
@@ -62,7 +52,6 @@ public class EdgeWeightedDigraph {
         else
         {
             adj[index].add(e);
-            //indegree[w]++;
             numberOfTrips++;
         }
 

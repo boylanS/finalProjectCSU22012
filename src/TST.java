@@ -94,45 +94,7 @@ public class TST<Value> {
 
         return x;
     }
-/*
-    public String longestPrefixOf(String query)
-    {
-        if (query == null)
-        {
-            throw new IllegalArgumentException("calls longestPrefixOf() with null argument");
-        }
 
-        if (query.length() == 0) return null;
-
-        int length = 0;
-
-        Node<Value> x = root;
-
-        int i = 0;
-
-        while (x != null && i < query.length())
-        {
-            char c = query.charAt(i);
-
-            if (c < x.c) x = x.left;
-            else if (c > x.c) x = x.right;
-            else
-            {
-                i++;
-                if (x.val != null) length = i;
-                x = x.mid;
-            }
-        }
-
-        return query.substring(0,length);
-    }
-
-    public Iterable<String> keys()
-    {
-        Queue<String> queue = new LinkedList<String>();
-        collect(root, new StringBuilder(), queue);
-        return queue;
-    }*/
 
     public Iterable<String> keysWithPrefix(String prefix)
     {
@@ -158,25 +120,6 @@ public class TST<Value> {
         collect(x.right, prefix, queue);
     }
 
-    public Iterable<String> keysThatMatch(String pattern) {
-        Queue<String> queue = new LinkedList<String>();
-        collect(root, new StringBuilder(), 0, pattern, queue);
-        return queue;
-    }
-
-    private void collect(Node<Value> x, StringBuilder prefix, int i, String pattern, Queue<String> queue) {
-        if (x == null) return;
-        char c = pattern.charAt(i);
-        if (c == '.' || c < x.c) collect(x.left, prefix, i, pattern, queue);
-        if (c == '.' || c == x.c) {
-            if (i == pattern.length() - 1 && x.val != null) queue.add(prefix.toString() + x.c);
-            if (i < pattern.length() - 1) {
-                collect(x.mid, prefix.append(x.c), i+1, pattern, queue);
-                prefix.deleteCharAt(prefix.length() - 1);
-            }
-        }
-        if (c == '.' || c > x.c) collect(x.right, prefix, i, pattern, queue);
-    }
 
 
 

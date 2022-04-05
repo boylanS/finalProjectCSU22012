@@ -479,7 +479,6 @@ public class busSystemUserInterface {
 
                     if (index == -1) {
                         System.out.println("Error: ID is invalid.");
-                        //inputScanner.nextLine();
 
                     } else {
                         sourceID = tempSource;
@@ -493,9 +492,7 @@ public class busSystemUserInterface {
                         validDesiredSource = true;
                         break;
                     } else {
-
                         System.out.println("Error: stop ID must be an integer.");
-                        inputScanner.nextLine();
                     }
                 }
 
@@ -521,13 +518,11 @@ public class busSystemUserInterface {
                                 userQuit = true;
                                 validDesiredSource = true;
                                 break;
-                                //System.out.println("Thank you! Have a nice day :)");
                             }
                             else
                             {
                                 System.out.println("Error: stop ID must be an integer.");
-                            }   inputScanner.nextLine();
-
+                            }
 
                         }
                     }
@@ -612,7 +607,7 @@ public class busSystemUserInterface {
 
         }
 
-        System.out.println("Search for bus stop by name (enter in UPPERCASE only, or enter QUIT to exit): ");
+        System.out.println("Search for bus stop by name (or enter QUIT to exit): ");
         Scanner busStopScanner = new Scanner(System.in);
         String searchStop = busStopScanner.nextLine();
 
@@ -622,6 +617,7 @@ public class busSystemUserInterface {
         }
         else
         {
+            searchStop = searchStop.toUpperCase();
             Iterable<String> searchKeys = busStopTrie.keysWithPrefix(searchStop);
 
             ArrayList<busStop> searchReturns = new ArrayList<busStop>();
