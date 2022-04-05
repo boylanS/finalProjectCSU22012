@@ -467,70 +467,105 @@ public class busSystemUserInterface {
         int tempSource;
         int sourceID = 0;
         int destinationID = 0;
+        boolean userQuit = false;
 
+        if (!userQuit) {
 
-        while (!validDesiredSource) {
-            System.out.println("Enter desired source bus stop ID: ");
-            if (inputScanner.hasNextInt()) {
-                tempSource = inputScanner.nextInt();
-                int index = BinarySearch.indexOf(stopIDListSorted,tempSource);
+            while (!validDesiredSource) {
+                System.out.println("Enter desired source bus stop ID (or enter QUIT): ");
+                if (inputScanner.hasNextInt()) {
+                    tempSource = inputScanner.nextInt();
+                    int index = BinarySearch.indexOf(stopIDListSorted, tempSource);
 
-                if (index == -1) {
-                    System.out.println("Error: ID is invalid.");
+                    if (index == -1) {
+                        System.out.println("Error: ID is invalid.");
+                        //inputScanner.nextLine();
+
+                    } else {
+                        sourceID = tempSource;
+                        validDesiredSource = true;
+                    }
+                    inputScanner.nextLine();
                 } else {
-                    sourceID = tempSource;
-                    validDesiredSource = true;
+                    String tempString = inputScanner.nextLine();
+                    if (tempString.equalsIgnoreCase("QUIT")) {
+                        userQuit = true;
+                        validDesiredSource = true;
+                        break;
+                    } else {
+
+                        System.out.println("Error: stop ID must be an integer.");
+                        inputScanner.nextLine();
+                    }
                 }
-                inputScanner.nextLine();
-            } else {
-                System.out.println("Error: stop ID must be an integer.");
-                inputScanner.nextLine();
+
             }
-        }
 
-        while (!validDesiredDestination) {
-            System.out.println("Enter desired destination bus stop ID: ");
-            if (inputScanner.hasNextInt()) {
-                tempSource = inputScanner.nextInt();
-                int index = BinarySearch.indexOf(stopIDListSorted,tempSource);
+                if (!userQuit) {
+                    while (!validDesiredDestination) {
+                        System.out.println("Enter desired destination bus stop ID (or enter QUIT): ");
+                        if (inputScanner.hasNextInt()) {
+                            tempSource = inputScanner.nextInt();
+                            int index = BinarySearch.indexOf(stopIDListSorted, tempSource);
 
-                if (index == -1) {
-                    System.out.println("Error: ID is invalid.");
-                } else {
-                    destinationID = tempSource;
-                    validDesiredDestination = true;
+                            if (index == -1) {
+                                System.out.println("Error: ID is invalid.");
+                            } else {
+                                destinationID = tempSource;
+                                validDesiredDestination = true;
+                            }
+                            inputScanner.nextLine();
+                        } else {
+                            String tempString = inputScanner.nextLine();
+                            if (tempString.equalsIgnoreCase("QUIT")) {
+                                userQuit = true;
+                                validDesiredSource = true;
+                                break;
+                                //System.out.println("Thank you! Have a nice day :)");
+                            }
+                            else
+                            {
+                                System.out.println("Error: stop ID must be an integer.");
+                            }   inputScanner.nextLine();
+
+
+                        }
+                    }
                 }
-                inputScanner.nextLine();
-            } else {
-                System.out.println("Error: stop ID must be an integer.");
-                inputScanner.nextLine();
-            }
+
         }
 
-        int sourceIDIndex = BinarySearch.indexOf(stopIDs,sourceID);
-
-        DijkstraSP shortestPath = new DijkstraSP(graphRep, sourceIDIndex,
-                stopIDs);
-
-        int destinationIDIndex = BinarySearch.indexOf(stopIDs,destinationID);
-
-        if (shortestPath.hasPathTo(destinationIDIndex) == false)
+        if (sourceID != 0 && destinationID != 0)
         {
-            System.out.println("No path found :(");
-        }
-        else
-        {
-            Iterable<DirectedEdge> SPuserInput = shortestPath.pathTo(destinationIDIndex);
-            double totalWeight = 0;
-            System.out.println("Route: ");
-            for(DirectedEdge path : SPuserInput)
+            int sourceIDIndex = BinarySearch.indexOf(stopIDs,sourceID);
+
+            DijkstraSP shortestPath = new DijkstraSP(graphRep, sourceIDIndex,
+                    stopIDs);
+
+            int destinationIDIndex = BinarySearch.indexOf(stopIDs,destinationID);
+
+            if (shortestPath.hasPathTo(destinationIDIndex) == false)
             {
-                System.out.print(path.to()+" <- ("+path.weight()+") - ");
-                totalWeight = totalWeight + path.weight();
+                System.out.println("No path found :(");
             }
-            System.out.print(sourceID);
-            System.out.println("\nTotal cost: "+totalWeight);
+            else
+            {
+                Iterable<DirectedEdge> SPuserInput = shortestPath.pathTo(destinationIDIndex);
+                double totalWeight = 0;
+                System.out.println("Route: ");
+                for(DirectedEdge path : SPuserInput)
+                {
+                    System.out.print(path.to()+" <- ("+path.weight()+") - ");
+                    totalWeight = totalWeight + path.weight();
+                }
+                System.out.print(sourceID);
+                System.out.println("\nTotal cost: "+totalWeight);
+            }
+        }else
+        {
+            System.out.println("Returning to main menu :)");
         }
+
     }
 
     public static void searchByStop(ArrayList<busStop> busStopList)
@@ -577,49 +612,58 @@ public class busSystemUserInterface {
 
         }
 
-        System.out.println("Search for bus stop by name (enter in UPPERCASE only): ");
+        System.out.println("Search for bus stop by name (enter in UPPERCASE only, or enter QUIT to exit): ");
         Scanner busStopScanner = new Scanner(System.in);
         String searchStop = busStopScanner.nextLine();
-        Iterable<String> searchKeys = busStopTrie.keysWithPrefix(searchStop);
 
-        ArrayList<busStop> searchReturns = new ArrayList<busStop>();
-        ArrayList<Integer> searchReturnIDs = new ArrayList<Integer>();
-        ArrayList<Integer> searchReturnIndex = new ArrayList<Integer>();
-
-        for (String s: searchKeys)
+        if (searchStop.equalsIgnoreCase("QUIT"))
         {
-            //System.out.println(s);
-            int searchIndex = busStopsAmended.indexOf(s);
-            searchReturnIndex.add(searchIndex);
+            System.out.println("Returning to main menu :)");
         }
-
-        if (searchReturnIndex.size() == 0)
+        else
         {
-            System.out.println("No bus stops found :(");
-        }
+            Iterable<String> searchKeys = busStopTrie.keysWithPrefix(searchStop);
 
-        for (int idCount = 0; idCount < searchReturnIndex.size(); idCount++)
-        {
-            int tempIndex = searchReturnIndex.get(idCount);
-            int tempStopID = stopIDList.get(tempIndex);
-            searchReturnIDs.add(tempStopID);
-        }
+            ArrayList<busStop> searchReturns = new ArrayList<busStop>();
+            ArrayList<Integer> searchReturnIDs = new ArrayList<Integer>();
+            ArrayList<Integer> searchReturnIndex = new ArrayList<Integer>();
 
-        for (int stopTotal = 0; stopTotal < busStopList.size(); stopTotal++)
-        {
-            int tempStopID = busStopList.get(stopTotal).getStop_id();
-
-            if (searchReturnIDs.contains(tempStopID))
+            for (String s: searchKeys)
             {
-                searchReturns.add(busStopList.get(stopTotal));
+                //System.out.println(s);
+                int searchIndex = busStopsAmended.indexOf(s);
+                searchReturnIndex.add(searchIndex);
+            }
 
+            if (searchReturnIndex.size() == 0)
+            {
+                System.out.println("No bus stops found :(");
+            }
+
+            for (int idCount = 0; idCount < searchReturnIndex.size(); idCount++)
+            {
+                int tempIndex = searchReturnIndex.get(idCount);
+                int tempStopID = stopIDList.get(tempIndex);
+                searchReturnIDs.add(tempStopID);
+            }
+
+            for (int stopTotal = 0; stopTotal < busStopList.size(); stopTotal++)
+            {
+                int tempStopID = busStopList.get(stopTotal).getStop_id();
+
+                if (searchReturnIDs.contains(tempStopID))
+                {
+                    searchReturns.add(busStopList.get(stopTotal));
+
+                }
+            }
+
+            for (int returnedStops = 0; returnedStops < searchReturns.size(); returnedStops ++)
+            {
+                System.out.println(searchReturns.get(returnedStops).toString());
             }
         }
 
-        for (int returnedStops = 0; returnedStops < searchReturns.size(); returnedStops ++)
-        {
-            System.out.println(searchReturns.get(returnedStops).toString());
-        }
 
     }
 
@@ -631,31 +675,49 @@ public class busSystemUserInterface {
 
         while (!validTime)
         {
-            System.out.println("Enter arrival time in form HH:MM:SS: ");
+            System.out.println("Enter arrival time in form HH:MM:SS (or QUIT to exit): ");
             userTime = inputScanner.nextLine();
 
-            try{
-                LocalTime.parse(userTime);
+            if (userTime.equalsIgnoreCase("QUIT"))
+            {
                 validTime = true;
-            }catch (DateTimeParseException | NullPointerException e){
-                System.out.println("Invalid time string- must be in form HH:MM:SS");
+
+            }
+            else
+            {
+                try{
+                    LocalTime.parse(userTime);
+                    validTime = true;
+                }catch (DateTimeParseException | NullPointerException e){
+                    System.out.println("Invalid time string- must be in form HH:MM:SS");
+                }
+
             }
 
         }
 
-        ArrayList<busStopTimes> arrivalBusStopTimes = stopTimesGivenArrival(userTime,
-                busStopTimesList);
-        if (arrivalBusStopTimes.size() == 0)
+        if (userTime.equalsIgnoreCase("QUIT"))
         {
-            System.out.println("No bus stop times found with specified arrival time :(");
+            System.out.println("Returning to main menu :)");
+
         }
         else
         {
-            for (int countStops = 0; countStops < arrivalBusStopTimes.size(); countStops++)
+            ArrayList<busStopTimes> arrivalBusStopTimes = stopTimesGivenArrival(userTime,
+                    busStopTimesList);
+            if (arrivalBusStopTimes.size() == 0)
             {
-                System.out.println(arrivalBusStopTimes.get(countStops).toString());
+                System.out.println("No bus stop times found with specified arrival time :(");
+            }
+            else
+            {
+                for (int countStops = 0; countStops < arrivalBusStopTimes.size(); countStops++)
+                {
+                    System.out.println(arrivalBusStopTimes.get(countStops).toString());
+                }
             }
         }
+
     }
 
 }
